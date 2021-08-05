@@ -1,0 +1,100 @@
+{% extends 'base_templates/base.html' %}
+{% block content %}
+<div class="ml-10 ">
+    <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#exampleModalCenter"></i>
+</div>
+<form method="post" action="{% url 'profile' %}">
+    {% csrf_token %}
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">新建便签</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <textarea type="text" class="form-control" placeholder="请输入便签内容" name="note"></textarea>
+                  <input type="datetime-local" class="input-group date mt-4" name="reminder_time"/>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary">新建</button>
+              </div>
+            </div>
+         </div>
+    </div>
+</form>
+<!-- component -->
+
+<div class="mx-4 mt-4 mb-20">
+    {% for note in notes %}
+        {% if note.status == '未处理' %}
+            <div class="p-2 mb-2" >
+        <div class="inline-flex items-center bg-white leading-none text-pink-600 rounded-full p-2 shadow-sm text-teal text-sm">
+          <span class="inline-flex bg-pink-600 text-white rounded-full h-6 px-3 justify-center items-center"
+          data-toggle="modal" data-target="#{{ note }}" >{{ note.reminder_time }}</span>
+          <span class="inline-flex px-2 leading-snug" style="white-space: pre-wrap">{{ note.note }}</span>
+        </div>
+        </div>
+        {% else %}
+            <div class="p-2 mb-2" >
+        <div class="inline-flex items-center bg-white leading-none text-gray-600 rounded-full p-2 shadow-sm text-teal text-sm">
+          <span class="inline-flex bg-gray-400 text-white rounded-full h-6 px-3 justify-center items-center "
+          data-toggle="modal" data-target="#{{ note }}" >{{ note.reminder_time }}</span>
+          <span class="inline-flex px-2 leading-snug" style="white-space: pre-wrap">{{ note.note }}</span>
+        </div>
+        </div>
+        {% endif %}
+        <form method="post" action="{% url 'update_note' note.id %}">
+            {% csrf_token %}
+            <div class="modal fade" id="{{ note }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">修改便签</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <textarea type="text" class="form-control" placeholder="请输入便签内容" name="note">{{ note.note }}</textarea>
+                          <input type="datetime-local" class="input-group date mt-4" name="reminder_time" value="{{ note.reminder_time.date | date:"Y-m-d"}}T{{ note.reminder_time.time | date:"H:i:s"}}"/>
+
+                          <select class="form-control mt-4" name="status">
+
+                            <option value="未处理" {% if note.status == '未处理' %} selected="selected" {% endif %}>未处理</option>
+                            <option value="已完成" {% if note.status == '已完成' %} selected="selected" {% endif %}>已完成</option>
+                        </select>
+                      </div>
+                      <div class="modal-footer">
+                          <a type="button" class="btn btn-secondary" onclick="confirm({{ note.id }})">删除</a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
+                      </div>
+                    </div>
+                 </div>
+            </div>
+                <script>
+    // 删除文章的函数
+    function confirm(id) {
+        // 调用layer弹窗组件
+        layer.open({
+            // 弹窗标题
+            title: "确认删除",
+            // 正文
+            content: "确认删除吗？",
+            // 点击确定按钮后调用的回调函数
+            yes: function(index, layero) {
+                // 指定应当前往的 url
+                location.href='/delete_note/'+id+'/'
+            },
+        })
+    }
+</script>
+        </form>
+    {% endfor %}
+</div>
+
+{% endblock %}

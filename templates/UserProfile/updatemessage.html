@@ -1,0 +1,55 @@
+{% extends 'base_templates/base.html' %}
+{% block content %}
+    <form method="post" action="{% url 'mymessage'  user.id %}">
+    {% csrf_token %}
+<div class="flex justify-center  w-full">
+  <div class="rounded-xl bg-gray-50 w-full mx-6 mt-8 mb-24">
+      <div class="text-center py-6 mt-4 text-blue-500 font-bold text-xl mb-8"><span>用户：</span>{{ user.username }}</div>
+      <div class="px-6 md:px-20 py-4 text-lg grid md:grid-cols-9 gap-2">
+          <div class="md:col-start-2 md:col-span-4"><span class="text-blue-500 font-bold">姓名：</span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" name="name" value="{{ user_profile.name }}"></div>
+          <div class="md:col-start-6 md:col-span-4"><span class="text-blue-500 font-bold">身份证：</span></span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" name="ID_number" value="{{ user_profile.ID_number }}"></div>
+
+      </div>
+      <div class="px-6 md:px-20 py-4 text-lg grid md:grid-cols-9 gap-2">
+          <div class="md:col-start-2 md:col-span-4"><span class="text-blue-500 font-bold">学历：</span>
+              <select class="appearance-none px-4 rounded-xl focus:outline-none focus:ring focus:border-blue-300" name="education">
+                  <option  value="专科" {% if  user_profile.education  == "专科" %} selected {% endif %}>专科</option>
+                  <option  value="本科" {% if  user_profile.education  == "本科" %} selected {% endif %}>本科</option>
+                  <option  value="研究生" {% if  user_profile.education  == "研究生" %} selected {% endif %}>研究生</option>
+              </select>
+              </div>
+          <div class="md:col-start-6 md:col-span-4"><span class="text-blue-500 font-bold ">银行卡：</span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" name="bank_card" value="{{ user_profile.bank_card }}"></div>
+
+      </div>
+      <div class="px-6 md:px-20 py-4 text-lg grid md:grid-cols-9 gap-2">
+          <div class="md:col-start-2 md:col-span-4"><span class="text-blue-500 font-bold ">性别：</span>
+              <select class="appearance-none px-4 rounded-xl focus:outline-none focus:ring focus:border-blue-300" name="gender">
+                  <option  value="男" {% if  user_profile.gender  == "男" %} selected {% endif %}>男</option>
+                  <option  value="女" {% if  user_profile.gender  == "女" %} selected {% endif %}>女</option>
+                </select>
+              </div>
+          <div class="md:col-start-6 md:col-span-4"><span class="text-blue-500 font-bold ">入职时间：</span>{{ user_profile.enter_time }}</div>
+      </div>
+       <div class="px-6 md:px-20 py-4 text-lg grid md:grid-cols-9 gap-2">
+          <div class="md:col-start-2 md:col-span-4"><span class="text-blue-500 font-bold">手机：</span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" name="phone" value="{{ user_profile.phone }}"></div>
+           <div class="md:col-start-6 md:col-span-4"><span class="text-blue-500 font-bold ">政治面貌：</span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2 " type="text" name="political_landscape" value="{{ user_profile.political_landscape }}"></div>
+
+      </div>
+      <div class="px-6 md:px-20 py-4 text-lg grid md:grid-cols-9 gap-2 mb-8">
+          <div class="md:col-start-2 md:col-span-8"><span class="text-blue-500 font-bold">住址：</span><input class="rounded-xl focus:outline-none focus:ring focus:border-blue-300 px-2 w-5/6" type="text" name="address" value="{{ user_profile.address }}"></div>
+      </div>
+      <button type="submit"  class="inline px-20 py-2 rounded-full font-bold text-white bg-blue-500 cursor-pointer mr-4 mt-6 float-right mb-16 hover:bg-blue-600">修改</button>
+  </div>
+</div>
+</form>
+<style>
+input,select{
+    background:none;
+    outline:none;
+    border:1px solid #ccc;
+}
+
+
+
+</style>
+{% endblock %}

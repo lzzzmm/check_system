@@ -1,0 +1,43 @@
+{% extends 'base_templates/base.html' %}
+{% block content %}
+<table class="rounded-t-lg m-5 w-5/6 mx-auto bg-gray-200 text-gray-800">
+  <tr class="text-left border-b-2 border-gray-200">
+    <th class="px-4 py-3">申报时间</th>
+    <th class="px-4 py-3">申报信息</th>
+    <th class="px-4 py-3">处理状态</th>
+    <th class="px-4 py-3">处理人</th>
+      <th class="px-4 py-3"></th>
+  </tr>
+{% for apply in applys %}
+  <tr class="bg-gray-50 border-b border-gray-200 ">
+    <td class="px-4 py-3">{{ apply.apply_day }}</td>
+      <td class="px-4 py-3 text-blue-600"><a href="{% url 'apply_detail'  apply.id %}">{{ apply.detail | safe |slice:"10" }}...</a></td>
+    <td class="px-4 py-3">{{ apply.process_status }}</td>
+      <td class="px-4 py-3">{{ apply.hander }}</td>
+      {% if apply.process_status == "未处理" %}
+    <td class="px-4 py-3"><a onclick="confirm({{ apply.id }})" type="button" class="btn btn-secondary" >删除</a></td>
+  {% else %}
+    <td></td>
+  {% endif %}
+
+  </tr>
+    <script>
+    // 删除文章的函数
+    function confirm(id) {
+        // 调用layer弹窗组件
+        layer.open({
+            // 弹窗标题
+            title: "确认删除",
+            // 正文
+            content: "确认删除吗？",
+            // 点击确定按钮后调用的回调函数
+            yes: function(index, layero) {
+                // 指定应当前往的 url
+                location.href='/delete_apply/'+id+'/'
+            },
+        })
+    }
+</script>
+{% endfor %}
+</table>
+{% endblock %}

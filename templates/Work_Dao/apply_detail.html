@@ -1,0 +1,63 @@
+{% extends 'base_templates/base.html' %}
+{% block content %}
+<div class="flex justify-center  w-full">
+  <div class="rounded-xl bg-gray-50 w-full mx-6 mt-8 mb-24">
+    <div class="px-4 py-3 flex items-center justify-between text-blue-500 border-b">
+      <p class="inline  py-3 rounded-full font-bold cursor-pointer">申报内容</p>
+    </div>
+      <div class="mt-10 px-4 border-b">
+          <div class="text-lg font-normal leading-normal mb-10" style="white-space: pre-wrap; ">{{ object.detail | safe}}</div>
+      </div>
+    <div class="px-4 py-3 flex items-center justify-between text-blue-500 border-b">
+      <p class="inline  py-3 rounded-full font-bold cursor-pointer" data-toggle="collapse" data-target="#demo2">回复</p>
+    </div>
+      <div id="demo2" class="collapse">
+          {% if object.reply == None  %}
+              <div class="my-10 px-4">
+                  <div class="text-lg font-normal leading-normal text-center" style="white-space: pre-wrap; ">暂时无回复</div>
+              </div>
+          {% else %}
+              <div class="my-10 px-4">
+                  <div class="text-lg font-normal leading-normal " style="white-space: pre-wrap; ">{{ object.reply | safe}}</div>
+              </div>
+          {% endif %}
+       </div>
+    <div class="flex items-center text-blue-500 justify-between py-6 px-4 border-t" >
+        <div class="space-y-1 border-r-2 pr-3 hidden md:block">
+            <div class="text-sm leading-5 font-semibold"><span class="text-xs leading-4 font-normal text-gray-500"> 处理状态：</span> {{ object.process_status }}</div>
+               <div class="text-sm leading-5 font-semibold"><span class="text-xs leading-4 font-normal text-gray-500"> 申请人：</span> {{ object.applicant }}</div>
+               <div class="text-sm leading-5 font-semibold"><span class="text-xs leading-4 font-normal text-gray-500 pr"> 申报时间：</span> {{ object.apply_day }}</div>
+               <div class="text-sm leading-5 font-semibold"><span class="text-xs leading-4 font-normal text-gray-500 pr"> 处理人：</span>{{ object.hander | default_if_none:""}}</div>
+            </div>
+        {% if object.process_status == "未处理" %}
+        <div data-toggle="modal" data-target="#model">
+            <a class="inline px-4 py-3 rounded-full font-bold text-white bg-blue-500 cursor-pointer mr-4" href="{% url 'update_apply'  object.id %}">修改</a>
+            <a class="inline px-4 py-3 rounded-full font-bold text-white bg-gray-500 cursor-pointer mr-4" onclick="confirm({{ object.id }})">删除</a>
+          </div>
+        {% else %}
+        <div data-toggle="modal" data-target="#model">
+            <a class="inline px-4 py-3 rounded-full font-bold text-white bg-gray-500 cursor-pointer mr-4" onclick="confirm({{ object.id }})">删除</a>
+          </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+    // 删除文章的函数
+    function confirm(id) {
+        // 调用layer弹窗组件
+        layer.open({
+            // 弹窗标题
+            title: "确认删除",
+            // 正文
+            content: "确认删除吗？",
+            // 点击确定按钮后调用的回调函数
+            yes: function(index, layero) {
+                // 指定应当前往的 url
+                location.href='/delete_apply/'+id+'/'
+            },
+        })
+    }
+</script>
+{% endblock %}
